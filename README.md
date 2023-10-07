@@ -4,7 +4,7 @@
 Java , Spring boot , Rest API , Mongodb , H2Database driver
 
 ### Steps to run
-1. `Clone project from git reposiory`
+1. `Clone project from git reposiory` <br/>
    https://github.com/sahannimesh99/Mongodb_Springboot <br/>
    <br/>
 2. `Inject all dependencies required`<br/>
