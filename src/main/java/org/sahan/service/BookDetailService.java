@@ -17,7 +17,7 @@ public interface BookDetailService {
 
     List<BookDetailDTO> getAllBookDetail();
 
-    List<String> getAllClients();
+    List<AddressDTO> getAllClients();
 
     AddressDTO searchClient(String clientNumber);
 }

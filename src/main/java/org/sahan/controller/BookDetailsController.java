@@ -56,7 +56,7 @@ public class BookDetailsController {
 
     @GetMapping(path = "/get/clientNumbers")
     public ResponseEntity<?> getAllClients() {
-        List<String> allClients = bookDetailService.getAllClients();
+        List<AddressDTO> allClients = bookDetailService.getAllClients();
         return new ResponseEntity<>(new StandardResponse(200, "Success", allClients), HttpStatus.OK);
     }
 

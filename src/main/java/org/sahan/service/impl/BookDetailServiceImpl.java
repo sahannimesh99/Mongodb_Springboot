@@ -29,54 +29,6 @@ public class BookDetailServiceImpl implements BookDetailService {
         this.mapper = mapper;
     }
 
-    @Override
-    public void saveBookDetail(BookDetailDTO dto) {
-        if (!repo.existsById(dto.getIsbn())) {
-            BookDetail c = mapper.map(dto, BookDetail.class);
-            repo.save(c);
-        } else {
-            throw new RuntimeException("Book already exist..!");
-        }
-    }
-
-    @Override
-    public void updateBookDetail(BookDetailDTO dto) {
-        if (repo.existsById(dto.getIsbn())) {
-            BookDetail c = mapper.map(dto, BookDetail.class);
-            repo.save(c);
-        } else {
-            throw new RuntimeException("No such book for update..!");
-        }
-    }
-
-    @Override
-    public BookDetailDTO searchBookDetail(Integer isbn) {
-        Optional<BookDetail> bookDetail = repo.findById(isbn);
-        if (bookDetail.isPresent()) {
-            return mapper.map(bookDetail.get(), BookDetailDTO.class);
-        } else {
-            throw new RuntimeException("No book for id: " + isbn);
-        }
-    }
-
-
-    @Override
-    public void deleteBookDetail(Integer isbn) {
-        if (repo.existsById(isbn)) {
-            repo.deleteById(isbn);
-        } else {
-            throw new RuntimeException("No customer for delete ID: " + isbn);
-        }
-
-    }
-
-    @Override
-    public List<BookDetailDTO> getAllBookDetail() {
-        List<BookDetail> all = repo.findAll();
-        return mapper.map(all, new TypeToken<List<BookDetailDTO>>() {
-        }.getType());
-    }
-
     String jsonString = "[\n" +
             "  {\n" +
             "    \"date\": \"May 09, 2023\",\n" +
@@ -129,26 +81,90 @@ public class BookDetailServiceImpl implements BookDetailService {
             "]";
 
     @Override
-    public List<String> getAllClients() {
+    public void saveBookDetail(BookDetailDTO dto) {
+        if (!repo.existsById(dto.getIsbn())) {
+            BookDetail c = mapper.map(dto, BookDetail.class);
+            repo.save(c);
+        } else {
+            throw new RuntimeException("Book already exist..!");
+        }
+    }
 
+    @Override
+    public void updateBookDetail(BookDetailDTO dto) {
+        if (repo.existsById(dto.getIsbn())) {
+            BookDetail c = mapper.map(dto, BookDetail.class);
+            repo.save(c);
+        } else {
+            throw new RuntimeException("No such book for update..!");
+        }
+    }
+
+    @Override
+    public BookDetailDTO searchBookDetail(Integer isbn) {
+        Optional<BookDetail> bookDetail = repo.findById(isbn);
+        if (bookDetail.isPresent()) {
+            return mapper.map(bookDetail.get(), BookDetailDTO.class);
+        } else {
+            throw new RuntimeException("No book for id: " + isbn);
+        }
+    }
+
+    @Override
+    public void deleteBookDetail(Integer isbn) {
+        if (repo.existsById(isbn)) {
+            repo.deleteById(isbn);
+        } else {
+            throw new RuntimeException("No customer for delete ID: " + isbn);
+        }
+    }
+
+    @Override
+    public List<BookDetailDTO> getAllBookDetail() {
+        List<BookDetail> all = repo.findAll();
+        return mapper.map(all, new TypeToken<List<BookDetailDTO>>() {
+        }.getType());
+    }
+
+    @Override
+    public List<AddressDTO> getAllClients() {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<String> clientNumbers = new ArrayList<>();
+        List<AddressDTO> addressList = new ArrayList<>();
 
         try {
-            JsonNode jsonNode = objectMapper.readTree(jsonString);
+            // Parse the JSON string into a JsonNode
+            JsonNode rootNode = objectMapper.readTree(jsonString);
 
-            // Assuming the JSON is an array with one or more elements
-            for (JsonNode clientNode : jsonNode) {
-                JsonNode clientNumberNode = clientNode.get("clientNumber");
-                if (clientNumberNode != null && clientNumberNode.isTextual()) {
-                    clientNumbers.add(clientNumberNode.asText());
+            // Iterate through the JSON array
+            for (JsonNode node : rootNode) {
+                AddressDTO addressDto = new AddressDTO();
+                addressDto.setDate(node.get("date").asText());
+                addressDto.setClientName(node.get("clientName").asText());
+                addressDto.setReferenceName(node.get("referenceName").asText());
+                addressDto.setToAddress(node.get("toAddress").asText());
+                addressDto.setCcAddress(node.get("ccAddress").asText());
+                addressDto.setClientNumber(node.get("clientNumber").asText());
+
+                List<FundsDTO> funds = new ArrayList<>();
+                JsonNode fundsNode = node.get("funds");
+                for (JsonNode fundNode : fundsNode) {
+                    FundsDTO fundDTO = new FundsDTO();
+                    fundDTO.setFundName(fundNode.get("fundName").asText());
+                    fundDTO.setNoOfUnits(fundNode.get("NoOfUnits").asInt());
+                    fundDTO.setUnitPrice(fundNode.get("unitPrice").asInt());
+                    fundDTO.setMarketValue(fundNode.get("marketValue").asInt());
+                    fundDTO.setGains(fundNode.get("gains").asInt());
+                    funds.add(fundDTO);
                 }
+                addressDto.setFunds(funds);
+
+                addressList.add(addressDto);
             }
         } catch (Exception e) {
-            throw new RuntimeException("No customers found");
+            throw new RuntimeException("Error while parsing clients");
         }
 
-        return clientNumbers;
+        return addressList;
     }
 
 
@@ -167,17 +183,32 @@ public class BookDetailServiceImpl implements BookDetailService {
                     AddressDTO addressDto = new AddressDTO();
                     addressDto.setDate(node.get("date").asText());
                     addressDto.setClientName(node.get("clientName").asText());
+                    addressDto.setClientNumber(node.get("clientNumber").asText());
                     addressDto.setReferenceName(node.get("referenceName").asText());
                     addressDto.setToAddress(node.get("toAddress").asText());
                     addressDto.setCcAddress(node.get("ccAddress").asText());
+
+                    // Create and set the FundsDTO list
+                    List<FundsDTO> fundsList = new ArrayList<>();
+                    JsonNode fundsNode = node.get("funds");
+                    for (JsonNode fundNode : fundsNode) {
+                        FundsDTO fundsDTO = new FundsDTO();
+                        fundsDTO.setFundName(fundNode.get("fundName").asText());
+                        fundsDTO.setNoOfUnits(fundNode.get("NoOfUnits").asInt());
+                        fundsDTO.setUnitPrice(fundNode.get("unitPrice").asInt());
+                        fundsDTO.setMarketValue(fundNode.get("marketValue").asInt());
+                        fundsDTO.setGains(fundNode.get("gains").asInt());
+                        fundsList.add(fundsDTO);
+                    }
+                    addressDto.setFunds(fundsList);
+
                     return addressDto;
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException("Error while parsing clients");
         }
-
-        throw new RuntimeException("No customers found"); // Return null if clientNumber is not found in the JSON
+        throw new RuntimeException("No customers found");
     }
 }
 
