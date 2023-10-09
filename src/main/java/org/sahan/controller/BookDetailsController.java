@@ -1,5 +1,6 @@
 package org.sahan.controller;
 
+import org.sahan.dto.AddressDTO;
 import org.sahan.dto.BookDetailDTO;
 import org.sahan.service.BookDetailService;
 import org.sahan.util.StandardResponse;
@@ -53,4 +54,15 @@ public class BookDetailsController {
         return new ResponseEntity<>(new StandardResponse(200, "Success", allBookDetails), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/get/clientNumbers")
+    public ResponseEntity<?> getAllClients() {
+        List<String> allClients = bookDetailService.getAllClients();
+        return new ResponseEntity<>(new StandardResponse(200, "Success", allClients), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{clientNumber}")
+    public ResponseEntity<?> searchClient(@PathVariable String clientNumber) {
+        AddressDTO addressDTO = bookDetailService.searchClient(clientNumber);
+        return new ResponseEntity<>(new StandardResponse(200, "Success", addressDTO), HttpStatus.OK);
+    }
 }
