@@ -60,7 +60,7 @@ public class BookDetailsController {
         return new ResponseEntity<>(new StandardResponse(200, "Success", allClients), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{clientNumber}")
+    @GetMapping(path = "/client/{clientNumber}")
     public ResponseEntity<?> searchClient(@PathVariable String clientNumber) {
         AddressDTO addressDTO = bookDetailService.searchClient(clientNumber);
         return new ResponseEntity<>(new StandardResponse(200, "Success", addressDTO), HttpStatus.OK);
