@@ -1,0 +1,27 @@
+[
+  {
+    "date": "May 09, 2023",
+    "toAddress": "Ms. Thamali Rodrigo\nPartner, KPMG, P.O. Box 186,\nNo:32, Sir Mohamed Macan Markar Mawatha,\nColombo 03",
+    "clientName": "SENKADAGALA FINANCE PLC",
+    "clientNumber": "1024712-01",
+    "funds": [
+      {
+        "fundName": "NDB WEALTH MONEY FUND",
+        "NoOfUnits": 0,
+        "unitPrice": 0,
+        "marketValue": 0,
+        "gains": 0
+      },
+      {
+        "fundName": "NDB WEALTH MONEY FUND",
+        "NoOfUnits": 0,
+        "unitPrice": 0,
+        "marketValue": 0,
+        "gains": 0
+      }
+    ],
+    "referenceName": "NDB WEALTH MANAGEMENT LIMITED",
+    "ccAddress": "SENKADAGALA FINANCE PLC\nNO 267, GALLE ROAD\nCOLOMBO 03"
+  }
+]
+
