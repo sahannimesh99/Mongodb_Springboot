@@ -2,6 +2,8 @@ package org.sahan.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.sahan.dto.AddressDTO;
@@ -13,7 +15,9 @@ import org.sahan.service.BookDetailService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -210,7 +214,103 @@ public class BookDetailServiceImpl implements BookDetailService {
         }
         throw new RuntimeException("No customers found");
     }
+
+    @Override
+    public String createTemplate(String clientNumber) {
+        String htmlTemplate = """
+                <!DOCTYPE html>
+                <head>
+                    <title>Confirmation of Unit Holding</title>
+                </head>
+
+                <body>
+                <div id="audit_conformation">
+
+                    <p>${date}</p><br>
+
+                    <p><b>${toAddress}</b></p>
+
+                    <p>Dear Sir/Madam,</p>
+                    <p><u>${clientName} - ${clientNumber}</u></p>
+                    <p>With reference to the request made by ${clientName}, we wish to confirm the following investments:
+                        As at March 31, 2023, the total number of units held in the name of ${clientName}, in the Unit Capital
+                        of the ${referenceName} Unit Trust Funds and the respective market values are as follows.</p>
+
+                    <table border="1">
+                        <tr>
+                            <th>Fund Name</th>
+                            <th>No. of Units</th>
+                            <th>Unit Price (Rs.)</th>
+                            <th>Market Value (Rs.)</th>
+                            <th>Realized Gains/ Unrealized
+                                Gains for the Period of 01.04.2022-31.03.2023 (Rs)
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>${fundName}</td>
+                            <td>${NoOfUnits}</td>
+                            <td>${unitPrice}</td>
+                            <td>${marketValue}</td>
+                            <td>${gains}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td><b> 14,097,580.94</b></td>
+                        </tr>
+                    </table>
+
+                    <p>NDB Wealth Funds are licensed Unit Trust Funds Governed by Securities and Exchange Commission of Sri Lanka and
+                        managed by NDB Wealth Management Limited.</p>
+
+                    <p>We confirm that the market value of the fund is redeemable at any given time upon the request of the client.</p>
+
+                    <p>Please note that the buying price (the price a client will receive when he sells a unit to cash out) per unit is
+                        computed daily and subject to fluctuations.</p>
+
+                    <p>This letter has been issued on the request of the above account holder without any liability on our part.</p>
+
+                    <p>Yours faithfully.</p>
+                    <p>NDB WEALTH MANAGEMENT LIMITED</p>
+
+                    <p>Registrar</p>
+
+                    <p>CC: SENKADAGALA FINANCE PLC NO 267, GALLE ROAD COLOMBO 03</p>
+                </div>
+                </body>""";
+
+        AddressDTO addressDto = searchClient(clientNumber);
+        htmlTemplate = htmlTemplate.replace("${date}", addressDto.getDate());
+        htmlTemplate = htmlTemplate.replace("${toAddress}", addressDto.getToAddress());
+        htmlTemplate = htmlTemplate.replace("${clientName}", addressDto.getClientName());
+        htmlTemplate = htmlTemplate.replace("${clientNumber}", addressDto.getClientNumber());
+        htmlTemplate = htmlTemplate.replace("${referenceName}", addressDto.getReferenceName());
+        htmlTemplate = htmlTemplate.replace("${fundName}", addressDto.getFunds().get(0).getFundName());
+//        htmlTemplate = htmlTemplate.replace("${NoOfUnits}", addressDto.getFunds().get(0).getNoOfUnits());
+
+        Document doc = Jsoup.parse(htmlTemplate);
+        System.out.println(doc);
+        return htmlTemplate;
+    }
+
+    @Override
+    public String convertHtmlToBase64(String clientNumber) {
+        createTemplate(clientNumber);
+
+        // Convert the HTML string into a Jsoup Document
+        Document doc = Jsoup.parse(createTemplate(clientNumber));
+        String htmlString = doc.toString();
+
+        // Print the HTML document
+        System.out.println(doc);
+        byte[] htmlBytes = htmlString.getBytes(StandardCharsets.UTF_8);
+
+        return Base64.getEncoder().encodeToString(htmlBytes);
+    }
 }
+
 
 
 

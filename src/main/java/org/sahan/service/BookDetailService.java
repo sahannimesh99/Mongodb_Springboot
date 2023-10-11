@@ -20,4 +20,8 @@ public interface BookDetailService {
     List<AddressDTO> getAllClients();
 
     AddressDTO searchClient(String clientNumber);
+
+    String createTemplate(String clientNumber);
+
+    String convertHtmlToBase64(String clientNumber);
 }

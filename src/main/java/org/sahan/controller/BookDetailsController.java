@@ -65,4 +65,16 @@ public class BookDetailsController {
         AddressDTO addressDTO = bookDetailService.searchClient(clientNumber);
         return new ResponseEntity<>(new StandardResponse(200, "Success", addressDTO), HttpStatus.OK);
     }
+
+    @GetMapping(path = "/template/{clientNumber}")
+    public ResponseEntity<?> createFullTemplate(@PathVariable String clientNumber) {
+        String s = bookDetailService.createTemplate(clientNumber);
+        return new ResponseEntity<>(new StandardResponse(200, "Success", s), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/template/export/{clientNumber}")
+    public ResponseEntity<?> createFullTemplateAndExport(@PathVariable String clientNumber) {
+        String doc = bookDetailService.convertHtmlToBase64(clientNumber);
+        return new ResponseEntity<>(new StandardResponse(200, "Success", doc), HttpStatus.OK);
+    }
 }
