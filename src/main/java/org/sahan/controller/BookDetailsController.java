@@ -1,6 +1,6 @@
 package org.sahan.controller;
 
-import org.sahan.dto.AddressDTO;
+import org.sahan.dto.AuditConformationDTO;
 import org.sahan.dto.BookDetailDTO;
 import org.sahan.service.BookDetailService;
 import org.sahan.util.StandardResponse;
@@ -26,6 +26,13 @@ public class BookDetailsController {
     @PostMapping("/")
     public ResponseEntity<?> addBookDetail(@RequestBody BookDetailDTO dto) {
         bookDetailService.saveBookDetail(dto);
+        StandardResponse response = new StandardResponse(200, "Success", null);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<?> addJsonData(@RequestBody AuditConformationDTO dto) {
+        bookDetailService.saveJson(dto);
         StandardResponse response = new StandardResponse(200, "Success", null);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -56,13 +63,13 @@ public class BookDetailsController {
 
     @GetMapping(path = "/get/clientNumbers")
     public ResponseEntity<?> getAllClients() {
-        List<AddressDTO> allClients = bookDetailService.getAllClients();
+        List<AuditConformationDTO> allClients = bookDetailService.getAllClients();
         return new ResponseEntity<>(new StandardResponse(200, "Success", allClients), HttpStatus.OK);
     }
 
     @GetMapping(path = "/client/{clientNumber}")
     public ResponseEntity<?> searchClient(@PathVariable String clientNumber) {
-        AddressDTO addressDTO = bookDetailService.searchClient(clientNumber);
+        AuditConformationDTO addressDTO = bookDetailService.searchClient(clientNumber);
         return new ResponseEntity<>(new StandardResponse(200, "Success", addressDTO), HttpStatus.OK);
     }
 

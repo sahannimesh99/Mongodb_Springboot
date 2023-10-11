@@ -1,13 +1,14 @@
 package org.sahan.service;
 
 
-import org.sahan.dto.AddressDTO;
+import org.sahan.dto.AuditConformationDTO;
 import org.sahan.dto.BookDetailDTO;
 
 import java.util.List;
 
 public interface BookDetailService {
     void saveBookDetail(BookDetailDTO dto);
+    void saveJson(AuditConformationDTO dto);
 
     void updateBookDetail(BookDetailDTO dto);
 
@@ -17,9 +18,9 @@ public interface BookDetailService {
 
     List<BookDetailDTO> getAllBookDetail();
 
-    List<AddressDTO> getAllClients();
+    List<AuditConformationDTO> getAllClients();
 
-    AddressDTO searchClient(String clientNumber);
+    AuditConformationDTO searchClient(String clientNumber);
 
     String createTemplate(String clientNumber);
 

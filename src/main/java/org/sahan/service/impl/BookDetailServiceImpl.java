@@ -6,11 +6,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.sahan.dto.AddressDTO;
+import org.sahan.dto.AuditConformationDTO;
 import org.sahan.dto.BookDetailDTO;
 import org.sahan.dto.FundsDTO;
+import org.sahan.entity.AuditConformation;
 import org.sahan.entity.BookDetail;
 import org.sahan.repo.BookDetailRepo;
+import org.sahan.repo.ReportGeneratorRepo;
 import org.sahan.service.BookDetailService;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +27,14 @@ import java.util.Optional;
 @Transactional
 public class BookDetailServiceImpl implements BookDetailService {
     private final BookDetailRepo repo;
+    private final ReportGeneratorRepo reportGeneratorRepo;
 
     private final ModelMapper mapper;
 
-    public BookDetailServiceImpl(BookDetailRepo repo, ModelMapper mapper) {
+    public BookDetailServiceImpl(BookDetailRepo repo, ModelMapper mapper, ReportGeneratorRepo reportGeneratorRepo) {
         this.repo = repo;
         this.mapper = mapper;
+        this.reportGeneratorRepo = reportGeneratorRepo;
     }
 
     String jsonString = "[\n" +
@@ -95,6 +99,16 @@ public class BookDetailServiceImpl implements BookDetailService {
     }
 
     @Override
+    public void saveJson(AuditConformationDTO dto) {
+        if (!reportGeneratorRepo.existsById(dto.getClientNumber())) {
+            AuditConformation c = mapper.map(dto, AuditConformation.class);
+            reportGeneratorRepo.save(c);
+        } else {
+            throw new RuntimeException("Book already exist..!");
+        }
+    }
+
+    @Override
     public void updateBookDetail(BookDetailDTO dto) {
         if (repo.existsById(dto.getIsbn())) {
             BookDetail c = mapper.map(dto, BookDetail.class);
@@ -131,9 +145,9 @@ public class BookDetailServiceImpl implements BookDetailService {
     }
 
     @Override
-    public List<AddressDTO> getAllClients() {
+    public List<AuditConformationDTO> getAllClients() {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<AddressDTO> addressList = new ArrayList<>();
+        List<AuditConformationDTO> addressList = new ArrayList<>();
 
         try {
             // Parse the JSON string into a JsonNode
@@ -141,7 +155,7 @@ public class BookDetailServiceImpl implements BookDetailService {
 
             // Iterate through the JSON array
             for (JsonNode node : rootNode) {
-                AddressDTO addressDto = new AddressDTO();
+                AuditConformationDTO addressDto = new AuditConformationDTO();
                 addressDto.setDate(node.get("date").asText());
                 addressDto.setClientName(node.get("clientName").asText());
                 addressDto.setReferenceName(node.get("referenceName").asText());
@@ -173,7 +187,7 @@ public class BookDetailServiceImpl implements BookDetailService {
 
 
     @Override
-    public AddressDTO searchClient(String clientNumber) {
+    public AuditConformationDTO searchClient(String clientNumber) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -184,7 +198,7 @@ public class BookDetailServiceImpl implements BookDetailService {
             for (JsonNode node : rootNode) {
                 String nodeClientNumber = node.get("clientNumber").asText();
                 if (nodeClientNumber.equals(clientNumber)) {
-                    AddressDTO addressDto = new AddressDTO();
+                    AuditConformationDTO addressDto = new AuditConformationDTO();
                     addressDto.setDate(node.get("date").asText());
                     addressDto.setClientName(node.get("clientName").asText());
                     addressDto.setClientNumber(node.get("clientNumber").asText());
@@ -281,7 +295,7 @@ public class BookDetailServiceImpl implements BookDetailService {
                 </div>
                 </body>""";
 
-        AddressDTO addressDto = searchClient(clientNumber);
+        AuditConformationDTO addressDto = searchClient(clientNumber);
         htmlTemplate = htmlTemplate.replace("${date}", addressDto.getDate());
         htmlTemplate = htmlTemplate.replace("${toAddress}", addressDto.getToAddress());
         htmlTemplate = htmlTemplate.replace("${clientName}", addressDto.getClientName());
