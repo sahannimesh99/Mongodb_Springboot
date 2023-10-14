@@ -9,6 +9,7 @@ import org.modelmapper.TypeToken;
 import org.sahan.dto.AuditConformationDTO;
 import org.sahan.dto.BookDetailDTO;
 import org.sahan.dto.FundsDTO;
+import org.sahan.dto.TemplateResDTO;
 import org.sahan.entity.AuditConformation;
 import org.sahan.entity.BookDetail;
 import org.sahan.repo.BookDetailRepo;
@@ -323,6 +324,7 @@ public class BookDetailServiceImpl implements BookDetailService {
 
         return Base64.getEncoder().encodeToString(htmlBytes);
     }
+
 }
 
 

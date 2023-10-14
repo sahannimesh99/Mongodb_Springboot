@@ -87,12 +87,18 @@
             <version>1.4.200</version> <!-- Use the latest version -->
         </dependency>
 
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>1.14.2</version> <!-- You can use the latest version available -->
-            </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.14.2</version> <!-- You can use the latest version available -->
+        </dependency>
 
+        <!-- MongoDB Java driver -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.4.0</version> <!-- Adjust the version as needed -->
+        </dependency>
     </dependencies>
 
     <build>

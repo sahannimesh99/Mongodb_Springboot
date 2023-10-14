@@ -1,27 +1,53 @@
-[
-  {
-    "date": "May 09, 2023",
-    "toAddress": "Ms. Thamali Rodrigo\nPartner, KPMG, P.O. Box 186,\nNo:32, Sir Mohamed Macan Markar Mawatha,\nColombo 03",
-    "clientName": "SENKADAGALA FINANCE PLC",
-    "clientNumber": "1024712-01",
-    "funds": [
+{
+  "templateString": "Hello",
+  "date": "May 09, 2023",
+  "toAddress": {
+    "address1": "Ms. Thamali Rodrigo,",
+    "address2": "Partner, KPMG, P.O. Box 186,",
+    "address3": "No:32, Sir Mohamed Macan Markar Mawatha,",
+    "address": "Colombo 03"
+  },
+  "designation": "Dear Sir/ Madam",
+  "clientName": "SENKADAGALA FINANCE PLC",
+  "clientNumber": "1024712-01",
+  "body1": {
+    "line1": "With reference to the request made by SENKADAGALA FINANCE PLC, we wish to confirm the following investments.",
+    "line2": "As at March 31, 2023, total number of units held in the name of SENKADAGALA FINANCE PLC, in the Unit Capital of the NDB WEALTH MANAGEMENT LIMITED Unit Trust Funds and the respective market values are as follows."
+  },
+  "tbl": {
+    "header1": "Fund Name",
+    "header2": "No.Unit",
+    "header3": "Unit Price",
+    "header4": "Market Value",
+    "header5": "Realized Gains/ Unrealized Gains for the Period of 01.04.2022 - 31.03.2023 (Rs)",
+    "tableBody": [
       {
-        "fundName": "NDB WEALTH MONEY FUND",
-        "NoOfUnits": 0,
-        "unitPrice": 0,
-        "marketValue": 0,
-        "gains": 0
+        "FundName": "NDB WEALTH MONEY FUND ",
+        "noOfUnits": "0.00",
+        "unitPrice": "0.00",
+        "marketValue": "0.00",
+        "gain": "14,097,580.94"
       },
       {
-        "fundName": "NDB WEALTH MONEY FUND",
-        "NoOfUnits": 0,
-        "unitPrice": 0,
-        "marketValue": 0,
-        "gains": 0
+        "FundName": " ",
+        "noOfUnits": "Total",
+        "unitPrice": "",
+        "marketValue": "0.00",
+        "gain": "14,097,580.94"
       }
     ],
+    "body2": "NDB Wealth Funds are licensed Unit Trust Funds Governed by Securities and Exchange Commission of Sri Lanka and managed by NDB Wealth Management Limited.",
+    "body3": "We confirm that market value of the fund is redeemable at any given time upon the request of the client.",
+    "body4": "Please note that the buying price (the price a client will receive when he sells a unit to cash out) per unit is computed daily and subject to fluctuations"
+  },
+  "footer": {
+    "faith": "Yours faithfully,",
     "referenceName": "NDB WEALTH MANAGEMENT LIMITED",
-    "ccAddress": "SENKADAGALA FINANCE PLC\nNO 267, GALLE ROAD\nCOLOMBO 03"
+    "space": "................................",
+    "sign": "Register"
+  },
+  "ccAddress": {
+    "addressLine1": "SENKADAGALA FINANCE PLC NO 267, ",
+    "addressLine2": "COLOMBO 03 "
   }
-]
-
+}
